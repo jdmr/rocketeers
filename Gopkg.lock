@@ -8,6 +8,15 @@
   version = "v0.24.0"
 
 [[projects]]
+  branch = "master"
+  name = "git.swau.edu/swau/api-v2"
+  packages = [
+    "campus",
+    "utils"
+  ]
+  revision = "5d4dd5c1a36c388eafc30bd46a04ee76580e8cee"
+
+[[projects]]
   name = "github.com/dgrijalva/jwt-go"
   packages = ["."]
   revision = "06ea1031745cb8b3dab3f6a236daf2b0aa468b7e"
@@ -18,6 +27,12 @@
   packages = ["."]
   revision = "c2828203cd70a50dcccfb2761f8b1f8ceef9a8e9"
   version = "v1.4.7"
+
+[[projects]]
+  name = "github.com/go-sql-driver/mysql"
+  packages = ["."]
+  revision = "d523deb1b23d913de5bdada721a6071e71283618"
+  version = "v1.4.0"
 
 [[projects]]
   name = "github.com/golang/protobuf"
@@ -151,7 +166,8 @@
   name = "golang.org/x/net"
   packages = [
     "context",
-    "context/ctxhttp"
+    "context/ctxhttp",
+    "websocket"
   ]
   revision = "32a936f46389aa10549d60bd7833e54b01685d09"
 
@@ -190,6 +206,7 @@
   name = "google.golang.org/appengine"
   packages = [
     ".",
+    "cloudsql",
     "internal",
     "internal/app_identity",
     "internal/base",
@@ -204,6 +221,18 @@
   version = "v1.1.0"
 
 [[projects]]
+  branch = "v3"
+  name = "gopkg.in/alexcesaro/quotedprintable.v3"
+  packages = ["."]
+  revision = "2caba252f4dc53eaf6b553000885530023f54623"
+
+[[projects]]
+  name = "gopkg.in/gomail.v2"
+  packages = ["."]
+  revision = "41f3572897373c5538c50a2402db15db079fa4fd"
+  version = "2.0.0"
+
+[[projects]]
   name = "gopkg.in/yaml.v2"
   packages = ["."]
   revision = "5420a8b6744d3b0345ab293f6fcba19c978f1183"
@@ -212,6 +241,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "06842ddef1aecaa93de5aeddf97dae9926cd63ee09514c38d87954b36a1b889c"
+  inputs-digest = "93d893a2711cffca76449e2a8adaf9001aadb405dba5f4c7eb5440ff672caec6"
   solver-name = "gps-cdcl"
   solver-version = 1
