@@ -26,7 +26,9 @@ create table games(
     name varchar(50) not null,
     seconds int not null,
     created datetime not null,
-    questions int not null
+    questions int not null,
+    status varchar(50),
+    question varchar(50)
 );
 
 create table game_chapters(
@@ -45,9 +47,8 @@ create table game_questions(
     game_id varchar(50),
     question_id varchar(50) not null,
     position smallint,
-    is_current bit,
     index game_chapters_games_idx(game_id),
-    index game_questions_questionos_idx(question_id),
+    index game_questions_questions_idx(question_id),
     foreign key (game_id)
     references games(id)
     on delete cascade,

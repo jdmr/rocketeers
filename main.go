@@ -1,13 +1,16 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"strings"
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 	"github.com/labstack/gommon/log"
 	"github.com/spf13/viper"
+	melody "gopkg.in/olahol/melody.v1"
 	// MySQL DB
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -69,29 +72,53 @@ func main() {
 	e.DELETE("/v1/questions/:questionID/answers/:answerID", deleteAnswerController)
 	e.POST("/v1/games", addGameController)
 	e.GET("/v1/games", getGamesController)
+	e.DELETE("/v1/games/:gameID", deleteGameController)
 	e.GET("/v1/games/:gameID", getGameController)
 	e.POST("/v1/games/:gameID/teams", addTeamController)
 	e.GET("/v1/games/:gameID/teams/:teamID", getTeamController)
+	e.DELETE("/v1/games/:gameID/teams/:teamID/answers/:answerID", deleteTeamAnswerController)
 	e.POST("/v1/games/:gameID/teams/:teamID/answers/:answerID", addTeamAnswerController)
+	e.POST("/v1/games/:gameID/start", startGameController)
+	e.POST("/v1/games/:gameID/finish", finishGameController)
+	e.GET("/v1/games/:gameID/finished", getFinishedGameController)
+	e.POST("/v1/games/:gameID/next", nextQuestionController)
+	e.POST("/v1/games/:gameID/previous", previousQuestionController)
+	e.GET("/v1/games/:gameID/current", getCurrentQuestionController)
+	e.GET("/v1/games/:gameID/home", getHomeTeamController)
 
 	m := melody.New()
 	m.HandleMessage(func(s *melody.Session, msg []byte) {
-		switch s.Request.URL.Path {
-		case "/ws/pbe/games":
+		if strings.HasPrefix(s.Request.URL.Path, "/ws/pbe/teams") {
 			games, err := getGames()
 			if err != nil {
 				log.Error("Could not get updated games: ", err)
 				return
 			}
 			msg, _ = json.Marshal(games)
+		} else if strings.HasPrefix(s.Request.URL.Path, "/ws/pbe/game") {
+			gameID := string(msg)
+			log.Info("WS: getting current question for : ", gameID)
+			question, err := getCurrentQuestion(gameID)
+			if err != nil {
+				log.Error("Could not get the current question: ", err)
+				return
+			}
+			msg, _ = json.Marshal(question)
 		}
 		m.BroadcastFilter(msg, func(q *melody.Session) bool {
 			return q.Request.URL.Path == s.Request.URL.Path
 		})
-	}
+	})
 
-	e.GET("/ws/pbe/games", func(c echo.Context) error {
+	e.GET("/ws/pbe/teams", func(c echo.Context) error {
 		m.HandleRequest(c.Response(), c.Request())
+		return nil
+	})
+
+	e.GET("/ws/pbe/game/:gameID", func(c echo.Context) error {
+		keys := make(map[string]interface{})
+		keys["gameID"] = c.Param("gameID")
+		m.HandleRequestWithKeys(c.Response(), c.Request(), keys)
 		return nil
 	})
 
