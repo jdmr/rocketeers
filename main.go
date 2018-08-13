@@ -122,5 +122,5 @@ func main() {
 		return nil
 	})
 
-	e.Logger.Fatal(e.Start("127.0.0.1:9000"))
+	e.Logger.Fatal(e.Start("localhost:9000"))
 }
