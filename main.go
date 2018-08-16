@@ -40,6 +40,11 @@ func main() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
+	e.Use(middleware.StaticWithConfig(middleware.StaticConfig{
+		Root:  "public",
+		HTML5: true,
+	}))
+
 	switch viper.GetString("log.level") {
 	case "DEBUG":
 		log.SetLevel(log.DEBUG)
@@ -53,38 +58,38 @@ func main() {
 		log.SetLevel(log.OFF)
 	}
 
-	e.GET("/v1/auth", login)
-	e.POST("/v1/auth", auth)
+	e.GET("/api/v1/auth", login)
+	e.POST("/api/v1/auth", auth)
 
-	rolesGroup := e.Group("/v1/roles")
+	rolesGroup := e.Group("/api/v1/roles")
 	rolesGroup.Use(jwtConfig)
 	rolesGroup.GET("", getRoles)
 
-	registrationGroup := e.Group("/v1/registration")
+	registrationGroup := e.Group("/api/v1/registration")
 	registrationGroup.Use(jwtConfig)
 	registrationGroup.POST("", updateRegistration)
 
-	e.POST("/v1/questions", addQuestionController)
-	e.GET("/v1/questions", getQuestionsController)
-	e.DELETE("/v1/questions/:questionID", deleteQuestionController)
-	e.GET("/v1/questions/:questionID", getQuestionController)
-	e.POST("/v1/questions/:questionID/answers", addAnswerController)
-	e.DELETE("/v1/questions/:questionID/answers/:answerID", deleteAnswerController)
-	e.POST("/v1/games", addGameController)
-	e.GET("/v1/games", getGamesController)
-	e.DELETE("/v1/games/:gameID", deleteGameController)
-	e.GET("/v1/games/:gameID", getGameController)
-	e.POST("/v1/games/:gameID/teams", addTeamController)
-	e.GET("/v1/games/:gameID/teams/:teamID", getTeamController)
-	e.DELETE("/v1/games/:gameID/teams/:teamID/answers/:answerID", deleteTeamAnswerController)
-	e.POST("/v1/games/:gameID/teams/:teamID/answers/:answerID", addTeamAnswerController)
-	e.POST("/v1/games/:gameID/start", startGameController)
-	e.POST("/v1/games/:gameID/finish", finishGameController)
-	e.GET("/v1/games/:gameID/finished", getFinishedGameController)
-	e.POST("/v1/games/:gameID/next", nextQuestionController)
-	e.POST("/v1/games/:gameID/previous", previousQuestionController)
-	e.GET("/v1/games/:gameID/current", getCurrentQuestionController)
-	e.GET("/v1/games/:gameID/home", getHomeTeamController)
+	e.POST("/api/v1/questions", addQuestionController)
+	e.GET("/api/v1/questions", getQuestionsController)
+	e.DELETE("/api/v1/questions/:questionID", deleteQuestionController)
+	e.GET("/api/v1/questions/:questionID", getQuestionController)
+	e.POST("/api/v1/questions/:questionID/answers", addAnswerController)
+	e.DELETE("/api/v1/questions/:questionID/answers/:answerID", deleteAnswerController)
+	e.POST("/api/v1/games", addGameController)
+	e.GET("/api/v1/games", getGamesController)
+	e.DELETE("/api/v1/games/:gameID", deleteGameController)
+	e.GET("/api/v1/games/:gameID", getGameController)
+	e.POST("/api/v1/games/:gameID/teams", addTeamController)
+	e.GET("/api/v1/games/:gameID/teams/:teamID", getTeamController)
+	e.DELETE("/api/v1/games/:gameID/teams/:teamID/answers/:answerID", deleteTeamAnswerController)
+	e.POST("/api/v1/games/:gameID/teams/:teamID/answers/:answerID", addTeamAnswerController)
+	e.POST("/api/v1/games/:gameID/start", startGameController)
+	e.POST("/api/v1/games/:gameID/finish", finishGameController)
+	e.GET("/api/v1/games/:gameID/finished", getFinishedGameController)
+	e.POST("/api/v1/games/:gameID/next", nextQuestionController)
+	e.POST("/api/v1/games/:gameID/previous", previousQuestionController)
+	e.GET("/api/v1/games/:gameID/current", getCurrentQuestionController)
+	e.GET("/api/v1/games/:gameID/home", getHomeTeamController)
 
 	m := melody.New()
 	m.HandleMessage(func(s *melody.Session, msg []byte) {
