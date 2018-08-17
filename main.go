@@ -45,6 +45,13 @@ func main() {
 		HTML5: true,
 	}))
 
+	e.Use(middleware.BasicAuth(func(username, password string, c echo.Context) (bool, error) {
+		if username == viper.GetString("auth.username") && password == viper.GetString("auth.password") {
+			return true, nil
+		}
+		return false, nil
+	}))
+
 	switch viper.GetString("log.level") {
 	case "DEBUG":
 		log.SetLevel(log.DEBUG)
