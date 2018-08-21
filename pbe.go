@@ -1141,65 +1141,6 @@ func getFinishedGameController(c echo.Context) error {
 	}
 	defer conn.Close()
 
-	// rows, err := conn.Query(`
-	// 	select
-	// 		q.id
-	// 		, q.book
-	// 		, q.chapter
-	// 		, q.verses
-	// 		, q.question
-	// 		, COALESCE(a.id, '')
-	// 		, COALESCE(a.answer, '')
-	// 		, COALESCE(a.status, false)
-	// 	from pbe.questions q
-	// 	inner join pbe.game_questions gq on gq.question_id = q.id
-	// 	left join pbe.answers a on a.question_id = q.id
-	// 	where gq.game_id = ?
-	// 	order by q.id, a.answer
-	// `, gameID)
-	// if err != nil {
-	// 	log.Error("Could not get questions: ", err)
-	// 	return c.JSON(http.StatusInternalServerError, "Could not get questions: "+err.Error())
-	// }
-
-	// question := &Question{}
-	// for rows.Next() {
-	// 	var (
-	// 		id           string
-	// 		book         string
-	// 		chapter      string
-	// 		verses       string
-	// 		questionText string
-	// 		answerID     string
-	// 		answer       string
-	// 		status       bool
-	// 	)
-	// 	err = rows.Scan(&id, &book, &chapter, &verses, &questionText, &answerID, &answer, &status)
-	// 	if err != nil {
-	// 		log.Error("Could not get question: ", err)
-	// 		return c.JSON(http.StatusInternalServerError, "Could not get question: "+err.Error())
-	// 	}
-
-	// 	if question.ID != id {
-	// 		question := &Question{
-	// 			ID:       id,
-	// 			Book:     book,
-	// 			Chapter:  chapter,
-	// 			Verses:   verses,
-	// 			Question: questionText,
-	// 		}
-	// 		game.Questions2 = append(game.Questions2, question)
-	// 	}
-	// 	if len(answerID) > 0 {
-	// 		a := &Answer{
-	// 			ID:     answerID,
-	// 			Answer: answer,
-	// 			Status: status,
-	// 		}
-	// 		question.Answers = append(question.Answers, a)
-	// 	}
-	// }
-
 	for _, team := range game.Teams {
 		log.Info("Getting results for: ", team.Name, " : ", team.ID)
 		rows, err := conn.Query(`

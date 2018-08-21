@@ -40,17 +40,17 @@ func main() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-	e.Use(middleware.StaticWithConfig(middleware.StaticConfig{
-		Root:  "public",
-		HTML5: true,
-	}))
+	// e.Use(middleware.StaticWithConfig(middleware.StaticConfig{
+	// 	Root:  "public",
+	// 	HTML5: true,
+	// }))
 
-	e.Use(middleware.BasicAuth(func(username, password string, c echo.Context) (bool, error) {
-		if username == viper.GetString("auth.username") && password == viper.GetString("auth.password") {
-			return true, nil
-		}
-		return false, nil
-	}))
+	// e.Use(middleware.BasicAuth(func(username, password string, c echo.Context) (bool, error) {
+	// 	if username == viper.GetString("auth.username") && password == viper.GetString("auth.password") {
+	// 		return true, nil
+	// 	}
+	// 	return false, nil
+	// }))
 
 	switch viper.GetString("log.level") {
 	case "DEBUG":
